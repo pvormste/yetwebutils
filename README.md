@@ -9,6 +9,7 @@ All packages are prefixed with `yet`.
 
 | package | Description |
 | ------- | ----------- |
+| [yetconfig](https://github.com/pvormste/yet-web-utils/tree/master/yetconfig) | Helper for loading config from environment |
 | [yetenv](https://github.com/pvormste/yet-web-utils/tree/master/yetenv) | Provides some logic to determine the environment (develop, staging, production) |
 | yetlog | Provides a logger agnostic logging interface which is used by all `yet` packages |
  
