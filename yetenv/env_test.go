@@ -5,7 +5,8 @@ import (
 	"os"
 	"testing"
 
-	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetEnvironment(t *testing.T) {
@@ -19,13 +20,13 @@ func TestGetEnvironment(t *testing.T) {
 			value := value
 
 			t.Run(fmt.Sprintf("ENVIRONMENT=%s", value), func(t *testing.T) {
-				tt := NewGomegaWithT(t)
+				assert := assert.New(t)
 
 				err := os.Setenv("ENVIRONMENT", value)
-				tt.Expect(err).ToNot(HaveOccurred())
+				require.NoError(t, err)
 
 				actualEnv := GetEnvironment()
-				tt.Expect(actualEnv).To(Equal(Production))
+				assert.Equal(Production, actualEnv)
 			})
 		}
 	})
@@ -40,13 +41,13 @@ func TestGetEnvironment(t *testing.T) {
 			value := value
 
 			t.Run(fmt.Sprintf("ENVIRONMENT=%s", value), func(t *testing.T) {
-				tt := NewGomegaWithT(t)
+				assert := assert.New(t)
 
 				err := os.Setenv("ENVIRONMENT", value)
-				tt.Expect(err).ToNot(HaveOccurred())
+				require.NoError(t, err)
 
 				actualEnv := GetEnvironment()
-				tt.Expect(actualEnv).To(Equal(Staging))
+				assert.Equal(Staging, actualEnv)
 			})
 		}
 	})
@@ -62,13 +63,13 @@ func TestGetEnvironment(t *testing.T) {
 			value := value
 
 			t.Run(fmt.Sprintf("ENVIRONMENT=%s", value), func(t *testing.T) {
-				tt := NewGomegaWithT(t)
+				assert := assert.New(t)
 
 				err := os.Setenv("ENVIRONMENT", value)
-				tt.Expect(err).ToNot(HaveOccurred())
+				require.NoError(t, err)
 
 				actualEnv := GetEnvironment()
-				tt.Expect(actualEnv).To(Equal(Develop))
+				assert.Equal(Develop, actualEnv)
 			})
 		}
 	})
