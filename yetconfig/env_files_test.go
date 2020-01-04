@@ -4,39 +4,39 @@ import (
 	"os"
 	"testing"
 
-	. "github.com/onsi/gomega"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSelectEnvFileByEnvironment(t *testing.T) {
 	t.Run("should return .env.prod for production", func(t *testing.T) {
-		tt := NewGomegaWithT(t)
+		assert := assert.New(t)
 
 		err := os.Setenv("ENVIRONMENT", "production")
-		tt.Expect(err).To(Not(HaveOccurred()))
+		require.NoError(t, err)
 
 		actualEnvFile := selectEnvFileByEnvironment()
-		tt.Expect(actualEnvFile).To(Equal(envFileProduction))
+		assert.Equal(envFileProduction, actualEnvFile)
 	})
 
 	t.Run("should return .env.staging for staging", func(t *testing.T) {
-		tt := NewGomegaWithT(t)
+		assert := assert.New(t)
 
 		err := os.Setenv("ENVIRONMENT", "staging")
-		tt.Expect(err).To(Not(HaveOccurred()))
+		require.NoError(t, err)
 
 		actualEnvFile := selectEnvFileByEnvironment()
-		tt.Expect(actualEnvFile).To(Equal(envFileStaging))
+		assert.Equal(envFileStaging, actualEnvFile)
 	})
 
 	t.Run("should return .env.dev for develop", func(t *testing.T) {
-		tt := NewGomegaWithT(t)
+		assert := assert.New(t)
 
 		err := os.Setenv("ENVIRONMENT", "develop")
-		tt.Expect(err).To(Not(HaveOccurred()))
+		require.NoError(t, err)
 
 		actualEnvFile := selectEnvFileByEnvironment()
-		tt.Expect(actualEnvFile).To(Equal(envFileDevelop))
+		assert.Equal(envFileDevelop, actualEnvFile)
 	})
 }
 
