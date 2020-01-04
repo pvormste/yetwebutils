@@ -3,7 +3,7 @@ package yetconfig
 import (
 	"path"
 
-	"github.com/pvormste/yet-web-utils/yetenv"
+	"github.com/pvormste/yetwebutils/yetenv"
 )
 
 const (
