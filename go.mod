@@ -1,4 +1,4 @@
-module github.com/pvormste/yet-web-utils
+module github.com/pvormste/yetwebutils
 
 go 1.13
 

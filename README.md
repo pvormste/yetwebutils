@@ -1,6 +1,6 @@
-# yet-(another-)web-utils
+# Yet 'Another' Web Utils (yetwebutils)
 
-yet-web-utils is a highly opinionated collection of go packages, which reduces the amount of boilerplate code for simple web projects.
+`yetwebutils` is a highly opinionated collection of go packages, which reduces the amount of boilerplate code for simple web projects.
 Remember: **It is highly opinionated. HIGHLY.** :-)
 
 ## Packages
