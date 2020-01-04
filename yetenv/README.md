@@ -9,3 +9,18 @@ The `ENVIRONMENT` values are not case-sensitives.
 | `production` | yetenv.Production |
 | `staging` | yetenv.Staging |
 | any other value | yetenv.Develop |
+
+## Usage
+
+```go
+environment := yetenv.GetEnvironment()
+
+switch environment {
+case yetenv.Production:
+    // Do something in production environment
+case yetenv.Staging:
+    // Do something in staging environment
+case yetenv.Develop:
+    // Do something in develop environment
+}
+```
