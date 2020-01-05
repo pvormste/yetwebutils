@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/pvormste/yetwebutils/yetconfig?status.svg)](https://godoc.org/github.com/pvormste/yetwebutils/yetconfig)
+
 # yetconfig
 
 `yetconfig` is a config loader for environment config. It follows the principle from [12 Factor App](https://12factor.net/config) which requires the config to be stored in the environment.

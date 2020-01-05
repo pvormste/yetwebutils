@@ -6,6 +6,16 @@ import (
 	"github.com/JeremyLoy/config"
 )
 
+// LoadEnvConfig loads the configuration from .env files and/or from OS environment.
+// The current directory can be respresented by ".".
+//
+// Example:
+//  type Config struct {
+//    Port int
+//  }
+//
+//  cfg := Config{}
+//  LoadEnvConfig(&cfg, ".")
 func LoadEnvConfig(targetConfig interface{}, pathToEnvFiles string) {
 	envFile := selectEnvFileByEnvironment()
 
