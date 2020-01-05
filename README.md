@@ -11,5 +11,6 @@ All packages are prefixed with `yet`.
 | ------- | ----------- |
 | [yetconfig](https://github.com/pvormste/yet-web-utils/tree/master/yetconfig) | Helper for loading config from environment |
 | [yetenv](https://github.com/pvormste/yet-web-utils/tree/master/yetenv) | Provides some logic to determine the environment (develop, staging, production) |
+| [yethttp](https://github.com/pvormste/yet-web-utils/tree/master/yethttp) | Provides helpers for working with http |
 | [yetlog](https://github.com/pvormste/yet-web-utils/tree/master/yetlog) | Provides a logger agnostic logging interface which is used by most `yet` packages |
  
