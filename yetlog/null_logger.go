@@ -1,7 +1,9 @@
 package yetlog
 
+// NullLoger is a logger implementation which does nothing. Can be used for testing.
 type NullLogger struct{}
 
+// NewNullLogger creates a new NullLogger.
 func NewNullLogger() Logger {
 	return NullLogger{}
 }

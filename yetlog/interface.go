@@ -1,5 +1,6 @@
 package yetlog
 
+// Logger is universal interface for implementing a logger.
 type Logger interface {
 	Debug(message string, fields ...interface{})
 	Info(message string, fields ...interface{})
