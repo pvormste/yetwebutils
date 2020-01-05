@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/pvormste/yetwebutils/yetlog"
+	"github.com/pvormste/yetwebutils/yetnet"
 )
 
 func (serverWrapper *ServerWrapper) createTestInstance(t *testing.T) (testServerWrapper ServerWrapper, port int) {
@@ -47,7 +48,10 @@ func TestApplication_Serve(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Eventually(func() bool {
-			return checkIfPortIsInUse(t, testPort)
+			isInUse, err := yetnet.IsPortInUse(testPort)
+			require.NoError(t, err)
+			return isInUse
+
 		}, time.Second, 5*time.Millisecond)
 	})
 
@@ -56,20 +60,9 @@ func TestApplication_Serve(t *testing.T) {
 
 		cancelFunc()
 		assert.Eventually(func() bool {
-			return !checkIfPortIsInUse(t, testPort)
+			isOpen, err := yetnet.IsPortOpen(testPort)
+			require.NoError(t, err)
+			return isOpen
 		}, time.Second, 5*time.Millisecond)
 	})
-}
-
-func checkIfPortIsInUse(t *testing.T, port int) bool {
-	l, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		return true
-	}
-
-	if err := l.Close(); err != nil {
-		t.Fatal(err)
-	}
-
-	return false
 }

@@ -3,6 +3,8 @@
 `yetwebutils` is a highly opinionated collection of go packages, which reduces the amount of boilerplate code for simple web projects.
 Remember: **It is highly opinionated. HIGHLY.** :-)
 
+But essentially it acts like a second standard lib for creating web applications.
+
 ## Packages
 
 All packages are prefixed with `yet`.
@@ -13,4 +15,5 @@ All packages are prefixed with `yet`.
 | [yetenv](https://github.com/pvormste/yet-web-utils/tree/master/yetenv) | Provides some logic to determine the environment (develop, staging, production) |
 | [yethttp](https://github.com/pvormste/yet-web-utils/tree/master/yethttp) | Provides helpers for working with http |
 | [yetlog](https://github.com/pvormste/yet-web-utils/tree/master/yetlog) | Provides a logger agnostic logging interface which is used by most `yet` packages |
+| [yetnet](https://github.com/pvormste/yet-web-utils/tree/master/yetnet) | Provides helper code for working with low level network like TCP, UDP and Ports |
  
