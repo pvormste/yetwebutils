@@ -14,7 +14,7 @@ All packages are prefixed with `yet`.
 | package | Description | GoDoc |
 | ------- | ----------- | ----- |
 | [yetconfig](https://github.com/pvormste/yet-web-utils/tree/master/yetconfig) | Helper for loading config from environment | |
-| [yetenv](https://github.com/pvormste/yet-web-utils/tree/master/yetenv) | Provides some logic to determine the environment (develop, staging, production) | |
+| [yetenv](https://github.com/pvormste/yet-web-utils/tree/master/yetenv) | Provides some logic to determine the environment (develop, staging, production) | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yetenv) |
 | [yethttp](https://github.com/pvormste/yet-web-utils/tree/master/yethttp) | Provides helpers for working with http | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yethttp) |
 | [yetlog](https://github.com/pvormste/yet-web-utils/tree/master/yetlog) | Provides a logger agnostic logging interface which is used by most `yet` packages | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yetlog) |
 | [yetnet](https://github.com/pvormste/yet-web-utils/tree/master/yetnet) | Provides helper code for working with low level network like TCP, UDP and Ports | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yetnet) |

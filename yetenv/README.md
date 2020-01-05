@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/pvormste/yetwebutils/yetenv?status.svg)](https://godoc.org/github.com/pvormste/yetwebutils/yetenv)
+
 # yetenv
 
 `yetenv` is small util package which helps to determine on which environment the application is running. It reads the `ENVIRONMENT` variable.

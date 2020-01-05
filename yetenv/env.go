@@ -19,6 +19,8 @@ const (
 	Develop    Environment = "develop"
 )
 
+// GetEnvironment returns the current Environment value depending on the OS environment
+// value of the variable ENVIRONMENT.
 func GetEnvironment() Environment {
 	envRaw := os.Getenv(environmentVariableName)
 	env := strings.ToLower(envRaw)
