@@ -23,6 +23,10 @@ func main() {
     webApp := NewWebApp(yetlog.NewNullLogger())
     if err := webApp.Serve(context.Background()); err != nil {
         panic(err)
-    }   
+    }
+
+    if err := webApp.WaitForShutdown(context.Background()); err != nil {
+        panic(err)
+    }      
 }
 ```
