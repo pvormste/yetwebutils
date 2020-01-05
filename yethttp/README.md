@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/pvormste/yetwebutils/yethttp?status.svg)](https://godoc.org/github.com/pvormste/yetwebutils/yethttp)
+
 # yethttp
 
 `yethttp` reduces the amount of boilerplate to write a simple http server with graceful shutdown.
