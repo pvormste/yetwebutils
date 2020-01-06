@@ -8,6 +8,12 @@ func NewNullLogger() Logger {
 	return NullLogger{}
 }
 
+func (l NullLogger) Reconfigure(options interface{}) {}
+
+func (l NullLogger) NewNamedLogger(name string) Logger {
+	return l
+}
+
 func (l NullLogger) Debug(message string, fields ...interface{}) {}
 
 func (l NullLogger) Info(message string, fields ...interface{}) {}
