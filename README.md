@@ -3,9 +3,10 @@
 # Yet 'Another' Web Utils (yetwebutils)
 
 `yetwebutils` is a highly opinionated collection of go packages, which reduces the amount of boilerplate code for simple web projects.
-Remember: **It is highly opinionated. HIGHLY.** :-)
 
-But essentially it acts like a second standard lib for creating web applications.
+But essentially it acts like another standard lib for creating web applications.
+
+_This project is more like an experiment on how much web functionality can be abstracted in own reusable packages and I'm very curious how this will evolve. The main goal is to reduce boilerplate code for greenfield web projects. Nervertheless feel free to use it for your own needs!_
 
 ## Packages
 
