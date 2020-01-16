@@ -1,4 +1,4 @@
-[![GitHub license](https://img.shields.io/github/license/pvormste/yetwebutils)](https://github.com/pvormste/yetwebutils/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/pvormste/yetwebutils)](https://github.com/pvormste/yetwebutils/blob/master/LICENSE) ![](https://github.com/pvormste/yetwebutils/workflows/lint/badge.svg?branch=master) ![](https://github.com/pvormste/yetwebutils/workflows/tests/badge.svg?branch=master)
 
 # Yet 'Another' Web Utils (yetwebutils)
 
