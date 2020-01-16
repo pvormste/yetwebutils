@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/pvormste/yetwebutils/yetlog"
+	"github.com/pvormste/yetlog"
 )
 
 // ServerWrapper wraps a http.Server and can handle server startup, routing and graceful shutdown.
