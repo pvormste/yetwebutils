@@ -8,6 +8,12 @@ But essentially it acts like another standard lib for creating web applications.
 
 _This project is more like an experiment on how much web functionality can be abstracted in own reusable packages and I'm very curious how this will evolve. The main goal is to reduce boilerplate code for greenfield web projects. Nervertheless feel free to use it for your own needs!_
 
+## Install
+
+```bash
+go get -u github.com/pvormste/yetwebutils
+```
+
 ## Packages
 
 All packages are prefixed with `yet`.
