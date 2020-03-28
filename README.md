@@ -20,7 +20,6 @@ All packages are prefixed with `yet`.
 
 | package | Description | GoDoc |
 | ------- | ----------- | ----- |
-| [yetconfig](https://github.com/pvormste/yet-web-utils/tree/master/yetconfig) | Helpers for loading config from environment | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yetconfig) |
 | [yethttp](https://github.com/pvormste/yet-web-utils/tree/master/yethttp) | Provides helpers for working with http | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yethttp) |
 | [yetnet](https://github.com/pvormste/yet-web-utils/tree/master/yetnet) | Provides helper code for working with low level network like TCP, UDP and Ports | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yetnet) |
  
