@@ -38,7 +38,7 @@ func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
 	c := make(chan error)
 	go func() {
 		e.logger.Info("starting server", "port", e.HttpPort)
-		if err := e.HttpServer.ListenAndServe(); err != nil {
+		if err := e.StartServer(); err != nil {
 			c <- err
 		}
 	}()
@@ -58,13 +58,20 @@ func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
 	}
 }
 
-// GracefulShutdown will shutdown the underlying http server gracefully.
+// StartServer starts the underlying http.Server by using httpServer.ListenAndServe(). This method can be overwritten
+// to be able to use framework specific function calls.
+func (e *EmbeddableServerWrapper) StartServer() error {
+	return e.HttpServer.ListenAndServe()
+}
+
+// GracefulShutdown will shutdown the underlying http.Server gracefully. This method can be overwritten to be able
+// to use framework specific function calls.
 func (e *EmbeddableServerWrapper) GracefulShutdown(ctx context.Context) error {
 	e.logger.Info("shutting down http server gracefully", "port", e.HttpPort)
 	return e.HttpServer.Shutdown(ctx)
 }
 
-// WaitForShutdown blocks the go routine and will only continue when it gets a kill signal (SIGINt, SIGTERM, ...).
+// WaitForShutdown blocks the go routine and will only continue when it gets a kill signal (SIGINT, SIGTERM, ...).
 func (e *EmbeddableServerWrapper) WaitForShutdown(ctx context.Context) error {
 	kill := make(chan os.Signal, 1)
 	signal.Notify(kill, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
