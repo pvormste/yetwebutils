@@ -11,20 +11,18 @@ import (
 	"github.com/pvormste/yetlog"
 )
 
-// ServerWrapper wraps a http.Server and can handle server startup, routing and graceful shutdown.
-type ServerWrapper struct {
+// EmbeddableServerWrapper wraps a http.Server and can handle server startup, routing and graceful shutdown.
+type EmbeddableServerWrapper struct {
 	HttpServer *http.Server
 	HttpPort   int
 	logger     yetlog.Logger
 }
 
-// NewServerWrapper returns a new ServerWrapper. It uses the yetlog.Logger interface for logging and needs a port
-// and a mux as http.Handler.
-func NewServerWrapper(logger yetlog.Logger, port int, mux http.Handler) ServerWrapper {
-	wrapper := ServerWrapper{
+// NewEmbeddableServerWrapper returns a new EmbeddableServerWrapper.
+func NewEmbeddableServerWrapper(logger yetlog.Logger, port int) EmbeddableServerWrapper {
+	wrapper := EmbeddableServerWrapper{
 		HttpServer: &http.Server{
-			Addr:    fmt.Sprintf(":%d", port),
-			Handler: mux,
+			Addr: fmt.Sprintf(":%d", port),
 		},
 		HttpPort: port,
 		logger:   logger,
@@ -34,19 +32,21 @@ func NewServerWrapper(logger yetlog.Logger, port int, mux http.Handler) ServerWr
 }
 
 // Serve starts the server and listens for new connections.
-func (serverWrapper *ServerWrapper) Serve(ctx context.Context) error {
+func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
+	e.HttpServer.Handler = e.Routes()
+
 	c := make(chan error)
 	go func() {
-		serverWrapper.logger.Info("starting server", "port", serverWrapper.HttpPort)
-		if err := serverWrapper.HttpServer.ListenAndServe(); err != nil {
+		e.logger.Info("starting server", "port", e.HttpPort)
+		if err := e.StartServer(); err != nil {
 			c <- err
 		}
 	}()
 
 	go func() {
 		<-ctx.Done()
-		if err := serverWrapper.GracefulShutdown(ctx); err != nil {
-			serverWrapper.logger.Error("could not shutdown http server gracefully", "port", serverWrapper.HttpPort)
+		if err := e.GracefulShutdown(ctx); err != nil {
+			e.logger.Error("could not shutdown http server gracefully", "port", e.HttpPort)
 		}
 	}()
 
@@ -58,21 +58,34 @@ func (serverWrapper *ServerWrapper) Serve(ctx context.Context) error {
 	}
 }
 
-// GracefulShutdown will shutdown the underlying http server gracefully.
-func (serverWrapper *ServerWrapper) GracefulShutdown(ctx context.Context) error {
-	serverWrapper.logger.Info("shutting down http server gracefully", "port", serverWrapper.HttpPort)
-	return serverWrapper.HttpServer.Shutdown(ctx)
+// StartServer starts the underlying http.Server by using httpServer.ListenAndServe(). This method can be overwritten
+// to be able to use framework specific function calls.
+func (e *EmbeddableServerWrapper) StartServer() error {
+	return e.HttpServer.ListenAndServe()
 }
 
-// WaitForShutdown blocks the go routine and will only continue when it gets a kill signal (SIGINt, SIGTERM, ...).
-func (serverWrapper *ServerWrapper) WaitForShutdown(ctx context.Context) error {
+// GracefulShutdown will shutdown the underlying http.Server gracefully. This method can be overwritten to be able
+// to use framework specific function calls.
+func (e *EmbeddableServerWrapper) GracefulShutdown(ctx context.Context) error {
+	e.logger.Info("shutting down http server gracefully", "port", e.HttpPort)
+	return e.HttpServer.Shutdown(ctx)
+}
+
+// WaitForShutdown blocks the go routine and will only continue when it receives a kill signal (SIGINT, SIGTERM, ...).
+func (e *EmbeddableServerWrapper) WaitForShutdown(ctx context.Context) error {
 	kill := make(chan os.Signal, 1)
 	signal.Notify(kill, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
 	<-kill
-	if err := serverWrapper.GracefulShutdown(ctx); err != nil {
+	if err := e.GracefulShutdown(ctx); err != nil {
 		return fmt.Errorf("wait-for-shutdown: %w", err)
 	}
 
 	return nil
+}
+
+// Routes is used to define the server routes and handlers. It uses the http.DefaultServeMux by default which shouldn't
+// be used in any productive application. This method is meant to be overwritten by the user of this package.
+func (e *EmbeddableServerWrapper) Routes() http.Handler {
+	return http.DefaultServeMux
 }

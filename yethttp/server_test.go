@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"net/http"
 	"testing"
 	"time"
 
@@ -15,8 +14,8 @@ import (
 	"github.com/pvormste/yetwebutils/yetnet"
 )
 
-func (serverWrapper *ServerWrapper) createTestInstance(t *testing.T) (testServerWrapper ServerWrapper, port int) {
-	newWrapperInstance := *serverWrapper
+func (e *EmbeddableServerWrapper) createTestInstance(t *testing.T) (testServerWrapper EmbeddableServerWrapper, port int) {
+	newWrapperInstance := *e
 
 	listener, err := net.Listen("tcp", ":0")
 	require.NoError(t, err)
@@ -36,7 +35,7 @@ func (serverWrapper *ServerWrapper) createTestInstance(t *testing.T) (testServer
 
 func TestApplication_Serve(t *testing.T) {
 	logger := yetlog.NewNullLogger()
-	serverWrapper := NewServerWrapper(logger, 0, http.NewServeMux())
+	serverWrapper := NewEmbeddableServerWrapper(logger, 0)
 
 	serverWrapperTestInstance, testPort := serverWrapper.createTestInstance(t)
 	ctx, cancelFunc := context.WithCancel(context.Background())

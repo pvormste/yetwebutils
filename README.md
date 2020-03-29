@@ -18,8 +18,8 @@ go get -u github.com/pvormste/yetwebutils
 
 All packages are prefixed with `yet`.
 
-| package | Description | GoDoc |
+| package | Description | pkg.go.dev doc |
 | ------- | ----------- | ----- |
-| [yethttp](https://github.com/pvormste/yet-web-utils/tree/master/yethttp) | Provides helpers for working with http | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yethttp) |
-| [yetnet](https://github.com/pvormste/yet-web-utils/tree/master/yetnet) | Provides helper code for working with low level network like TCP, UDP and Ports | [docs](https://godoc.org/github.com/pvormste/yetwebutils/yetnet) |
+| [yethttp](https://github.com/pvormste/yet-web-utils/tree/master/yethttp) | Provides helpers for working with http | [docs](https://pkg.go.dev/github.com/pvormste/yetwebutils/yethttp?tab=doc) |
+| [yetnet](https://github.com/pvormste/yet-web-utils/tree/master/yetnet) | Provides helper code for working with low level network like TCP, UDP and Ports | [docs](https://pkg.go.dev/github.com/pvormste/yetwebutils/yetnet?tab=doc) |
  
