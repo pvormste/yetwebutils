@@ -18,13 +18,11 @@ type EmbeddableServerWrapper struct {
 	logger     yetlog.Logger
 }
 
-// NewEmbeddableServerWrapper returns a new EmbeddableServerWrapper. It uses the yetlog.Logger interface for logging and needs a port
-// and a mux as http.Handler.
-func NewEmbeddableServerWrapper(logger yetlog.Logger, port int, mux http.Handler) EmbeddableServerWrapper {
+// NewEmbeddableServerWrapper returns a new EmbeddableServerWrapper.
+func NewEmbeddableServerWrapper(logger yetlog.Logger, port int) EmbeddableServerWrapper {
 	wrapper := EmbeddableServerWrapper{
 		HttpServer: &http.Server{
-			Addr:    fmt.Sprintf(":%d", port),
-			Handler: mux,
+			Addr: fmt.Sprintf(":%d", port),
 		},
 		HttpPort: port,
 		logger:   logger,
@@ -35,6 +33,8 @@ func NewEmbeddableServerWrapper(logger yetlog.Logger, port int, mux http.Handler
 
 // Serve starts the server and listens for new connections.
 func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
+	e.HttpServer.Handler = e.Routes()
+
 	c := make(chan error)
 	go func() {
 		e.logger.Info("starting server", "port", e.HttpPort)
@@ -71,7 +71,7 @@ func (e *EmbeddableServerWrapper) GracefulShutdown(ctx context.Context) error {
 	return e.HttpServer.Shutdown(ctx)
 }
 
-// WaitForShutdown blocks the go routine and will only continue when it gets a kill signal (SIGINT, SIGTERM, ...).
+// WaitForShutdown blocks the go routine and will only continue when it receives a kill signal (SIGINT, SIGTERM, ...).
 func (e *EmbeddableServerWrapper) WaitForShutdown(ctx context.Context) error {
 	kill := make(chan os.Signal, 1)
 	signal.Notify(kill, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
@@ -82,4 +82,10 @@ func (e *EmbeddableServerWrapper) WaitForShutdown(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// Routes is used to define the server routes and handlers. It uses the http.DefaultServeMux by default which shouldn't
+// be used in any productive application. This method is meant to be overwritten by the user of this package.
+func (e *EmbeddableServerWrapper) Routes() http.Handler {
+	return http.DefaultServeMux
 }

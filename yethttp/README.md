@@ -8,14 +8,14 @@
 
 ```go
 type WebApp struct {
-    yethttp.ServerWrapper
+    yethttp.EmbeddableServerWrapper
 }
 
 func NewWebApp(logger yetlog.Logger) WebApp {
-    serverWrapper := yethttp.NewServerWrapper(logger, 8080, http.NewServeMux())
+    serverWrapper := yethttp.NewEmbeddableServerWrapper(logger, 8080)
 
     return WebApp{
-        ServerWrapper: serverWrapper,
+        EmbeddableServerWrapper: serverWrapper,
     }
 }
 

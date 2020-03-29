@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"net/http"
 	"testing"
 	"time"
 
@@ -36,7 +35,7 @@ func (e *EmbeddableServerWrapper) createTestInstance(t *testing.T) (testServerWr
 
 func TestApplication_Serve(t *testing.T) {
 	logger := yetlog.NewNullLogger()
-	serverWrapper := NewEmbeddableServerWrapper(logger, 0, http.NewServeMux())
+	serverWrapper := NewEmbeddableServerWrapper(logger, 0)
 
 	serverWrapperTestInstance, testPort := serverWrapper.createTestInstance(t)
 	ctx, cancelFunc := context.WithCancel(context.Background())

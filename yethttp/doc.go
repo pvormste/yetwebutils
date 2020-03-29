@@ -6,7 +6,7 @@
 //  }
 //
 //  func NewWebApp(logger yetlog.Logger) WebApp {
-//    serverWrapper := yethttp.NewEmbeddableServerWrapper(logger, 8080, http.NewServeMux())
+//    serverWrapper := yethttp.NewEmbeddableServerWrapper(logger, 8080)
 //
 //    return WebApp{
 //      EmbeddableServerWrapper: serverWrapper,
