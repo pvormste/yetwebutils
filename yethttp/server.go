@@ -11,11 +11,21 @@ import (
 	"github.com/pvormste/yetlog"
 )
 
+// StartServerFunc is a function which can be used to customize the server start behavior.
+type StartServerFunc func(server *http.Server) error
+
+// DefaultStartServerFunc provides a default implementation for starting a http.Server which basically calls
+// its ListenAndServe() method.
+var DefaultStartServerFunc = func(server *http.Server) error {
+	return server.ListenAndServe()
+}
+
 // EmbeddableServerWrapper wraps a http.Server and can handle server startup, routing and graceful shutdown.
 type EmbeddableServerWrapper struct {
-	HttpServer *http.Server
-	HttpPort   int
-	logger     yetlog.Logger
+	HttpServer      *http.Server
+	Port            int
+	startServerFunc StartServerFunc
+	logger          yetlog.Logger
 }
 
 // NewEmbeddableServerWrapper returns a new EmbeddableServerWrapper.
@@ -24,8 +34,9 @@ func NewEmbeddableServerWrapper(logger yetlog.Logger, port int) EmbeddableServer
 		HttpServer: &http.Server{
 			Addr: fmt.Sprintf(":%d", port),
 		},
-		HttpPort: port,
-		logger:   logger,
+		Port:            port,
+		startServerFunc: DefaultStartServerFunc,
+		logger:          logger,
 	}
 
 	return wrapper
@@ -37,8 +48,8 @@ func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
 
 	c := make(chan error)
 	go func() {
-		e.logger.Info("starting server", "port", e.HttpPort)
-		if err := e.StartServer(); err != nil {
+		e.logger.Info("starting server", "port", e.Port)
+		if err := e.startServerFunc(e.HttpServer); err != nil {
 			c <- err
 		}
 	}()
@@ -46,7 +57,7 @@ func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
 		if err := e.GracefulShutdown(ctx); err != nil {
-			e.logger.Error("could not shutdown http server gracefully", "port", e.HttpPort)
+			e.logger.Error("could not shutdown http server gracefully", "port", e.Port)
 		}
 	}()
 
@@ -58,16 +69,16 @@ func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
 	}
 }
 
-// StartServer starts the underlying http.Server by using httpServer.ListenAndServe(). This method can be overwritten
-// to be able to use framework specific function calls.
-func (e *EmbeddableServerWrapper) StartServer() error {
-	return e.HttpServer.ListenAndServe()
+// SetStartServer is used to overwrite the internal StartServerFunc. It should be called before using
+// the Serve() method.
+func (e *EmbeddableServerWrapper) SetStartServerFunc(startServerFunc StartServerFunc) {
+	e.startServerFunc = startServerFunc
 }
 
 // GracefulShutdown will shutdown the underlying http.Server gracefully. This method can be overwritten to be able
 // to use framework specific function calls.
 func (e *EmbeddableServerWrapper) GracefulShutdown(ctx context.Context) error {
-	e.logger.Info("shutting down http server gracefully", "port", e.HttpPort)
+	e.logger.Info("shutting down http server gracefully", "port", e.Port)
 	return e.HttpServer.Shutdown(ctx)
 }
 
