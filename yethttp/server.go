@@ -20,6 +20,15 @@ var DefaultStartServerFunc = func(server *http.Server) error {
 	return server.ListenAndServe()
 }
 
+// RoutesFunc is used to define the server routes and handlers.
+type RoutesFunc func() http.Handler
+
+// DefaultRoutesFunc uses the http.DefaultServeMux which shouldn't be used in
+// any productive application. This method is meant to be used for prototyping or testing.
+var DefaultRoutesFunc = func() http.Handler {
+	return http.DefaultServeMux
+}
+
 // EmbeddableServerWrapper wraps a http.Server and can handle server startup, routing and graceful shutdown.
 type EmbeddableServerWrapper struct {
 	HttpServer      *http.Server
@@ -43,8 +52,8 @@ func NewEmbeddableServerWrapper(logger yetlog.Logger, port int) EmbeddableServer
 }
 
 // Serve starts the server and listens for new connections.
-func (e *EmbeddableServerWrapper) Serve(ctx context.Context) error {
-	e.HttpServer.Handler = e.Routes()
+func (e *EmbeddableServerWrapper) Serve(ctx context.Context, routesFunc RoutesFunc) error {
+	e.HttpServer.Handler = routesFunc()
 
 	c := make(chan error)
 	go func() {
@@ -93,10 +102,4 @@ func (e *EmbeddableServerWrapper) WaitForShutdown(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-// Routes is used to define the server routes and handlers. It uses the http.DefaultServeMux by default which shouldn't
-// be used in any productive application. This method is meant to be overwritten by the user of this package.
-func (e *EmbeddableServerWrapper) Routes() http.Handler {
-	return http.DefaultServeMux
 }

@@ -43,7 +43,7 @@ func TestApplication_Serve(t *testing.T) {
 	t.Run("should successfully start a server", func(t *testing.T) {
 		assert := assert.New(t)
 
-		err := serverWrapperTestInstance.Serve(ctx)
+		err := serverWrapperTestInstance.Serve(ctx, DefaultRoutesFunc)
 		require.NoError(t, err)
 
 		assert.Eventually(func() bool {
