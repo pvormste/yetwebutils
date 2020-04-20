@@ -21,7 +21,7 @@ func NewWebApp(logger yetlog.Logger) WebApp {
 
 func main() {
     webApp := NewWebApp(yetlog.NewNullLogger())
-    if err := webApp.Serve(context.Background()); err != nil {
+    if err := webApp.Serve(context.Background(), yethttp.DefaultRoutesFunc); err != nil {
         panic(err)
     }
 
