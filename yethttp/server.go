@@ -14,6 +14,9 @@ import (
 // StartServerFunc is a function which can be used to customize the server start behavior.
 type StartServerFunc func(server *http.Server) error
 
+// AfterShutdownFunc is a function which will be executed after the server shuts down.
+type AfterShutdownFunc func()
+
 // DefaultStartServerFunc provides a default implementation for starting a http.Server which basically calls
 // its ListenAndServe() method.
 var DefaultStartServerFunc = func(server *http.Server) error {
@@ -31,10 +34,11 @@ var DefaultRoutesFunc = func() http.Handler {
 
 // EmbeddableServerWrapper wraps a http.Server and can handle server startup, routing and graceful shutdown.
 type EmbeddableServerWrapper struct {
-	HttpServer      *http.Server
-	Port            int
-	startServerFunc StartServerFunc
-	logger          yetlog.Logger
+	HttpServer         *http.Server
+	Port               int
+	startServerFunc    StartServerFunc
+	afterShutdownFuncs []AfterShutdownFunc
+	logger             yetlog.Logger
 }
 
 // NewEmbeddableServerWrapper returns a new EmbeddableServerWrapper.
@@ -43,9 +47,10 @@ func NewEmbeddableServerWrapper(logger yetlog.Logger, port int) EmbeddableServer
 		HttpServer: &http.Server{
 			Addr: fmt.Sprintf(":%d", port),
 		},
-		Port:            port,
-		startServerFunc: DefaultStartServerFunc,
-		logger:          logger,
+		Port:               port,
+		startServerFunc:    DefaultStartServerFunc,
+		afterShutdownFuncs: make([]AfterShutdownFunc, 0),
+		logger:             logger,
 	}
 
 	return wrapper
@@ -78,17 +83,30 @@ func (e *EmbeddableServerWrapper) Serve(ctx context.Context, routesFunc RoutesFu
 	}
 }
 
-// SetStartServer is used to overwrite the internal StartServerFunc. It should be called before using
+// SetStartServerFunc is used to overwrite the internal StartServerFunc. It should be called before using
 // the Serve() method.
 func (e *EmbeddableServerWrapper) SetStartServerFunc(startServerFunc StartServerFunc) {
 	e.startServerFunc = startServerFunc
+}
+
+// AddAfterShutdownFunc will add an AfterShutdownFunc to the server.
+func (e *EmbeddableServerWrapper) AddAfterShutdownFunc(afterShutdownFunc AfterShutdownFunc) {
+	e.afterShutdownFuncs = append(e.afterShutdownFuncs, afterShutdownFunc)
 }
 
 // GracefulShutdown will shutdown the underlying http.Server gracefully. This method can be overwritten to be able
 // to use framework specific function calls.
 func (e *EmbeddableServerWrapper) GracefulShutdown(ctx context.Context) error {
 	e.logger.Info("shutting down http server gracefully", "port", e.Port)
-	return e.HttpServer.Shutdown(ctx)
+
+	err := e.HttpServer.Shutdown(ctx)
+
+	// Needs to be executed nevertheless if shutdown returns an error or not
+	for _, afterShutdownFunc := range e.afterShutdownFuncs {
+		afterShutdownFunc()
+	}
+
+	return err
 }
 
 // WaitForShutdown blocks the go routine and will only continue when it receives a kill signal (SIGINT, SIGTERM, ...).

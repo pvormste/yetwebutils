@@ -54,8 +54,14 @@ func TestApplication_Serve(t *testing.T) {
 		}, time.Second, 5*time.Millisecond)
 	})
 
-	t.Run("should stop server successfully", func(t *testing.T) {
+	t.Run("should stop server successfully and execute afterShutdownFunc", func(t *testing.T) {
 		assert := assert.New(t)
+
+		afterShutdownFuncExecuted := false
+		afterShutdownFunc := func() {
+			afterShutdownFuncExecuted = true
+		}
+		serverWrapperTestInstance.AddAfterShutdownFunc(afterShutdownFunc)
 
 		cancelFunc()
 		assert.Eventually(func() bool {
@@ -63,5 +69,6 @@ func TestApplication_Serve(t *testing.T) {
 			require.NoError(t, err)
 			return isOpen
 		}, time.Second, 5*time.Millisecond)
+		assert.True(afterShutdownFuncExecuted)
 	})
 }
