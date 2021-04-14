@@ -57,18 +57,18 @@ func TestApplication_Serve(t *testing.T) {
 	t.Run("should stop server successfully and execute afterShutdownFunc", func(t *testing.T) {
 		assert := assert.New(t)
 
-		afterShutdownFuncExecuted := false
+		shutdownChan := make(chan bool)
 		afterShutdownFunc := func() {
-			afterShutdownFuncExecuted = true
+			close(shutdownChan)
 		}
 		serverWrapperTestInstance.AddAfterShutdownFunc(afterShutdownFunc)
 
 		cancelFunc()
 		assert.Eventually(func() bool {
+			<-shutdownChan
 			isOpen, err := yetnet.IsPortOpen(testPort)
 			require.NoError(t, err)
 			return isOpen
 		}, time.Second, 5*time.Millisecond)
-		assert.True(afterShutdownFuncExecuted)
 	})
 }
